@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "rect-edit"
+version = "0.1.0"
+description = ""
+authors = ["Tatsu015 <tatsumi.soichiro@gmail.com>"]
+readme = "README.md"
+packages = [{include = "rect_edit"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+opencv-python = "^4.6.0.66"
+pdf2image = "^1.16.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
