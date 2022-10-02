@@ -93,6 +93,12 @@ def __filter(image_size: int, contours: Any) -> list[Rectangle]:
 
         x, y, w, h = cv.boundingRect(contour)
 
+        if h < 100:
+            continue
+
+        if w < 100:
+            continue
+
         if w < h:
             continue
 
