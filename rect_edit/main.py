@@ -1,8 +1,12 @@
+from ast import Return
 from dataclasses import dataclass
 from email.mime import image
 from email.policy import strict
 from pathlib import Path
+from tkinter.messagebox import RETRY
 from typing import Any
+from black import out
+from cv2 import contourArea
 from pdf2image import convert_from_path
 import cv2 as cv
 import numpy as np
@@ -14,6 +18,20 @@ class Rectangle:
     y: int
     w: int
     h: int
+
+    def is_contain(self, inner:"Rectangle")->bool:
+        if self is inner:
+            return False
+
+        if self.x > inner.x or self.x + self.w < inner.x:
+            return False
+        if self.y > inner.y or self.y + self.h < inner.y:
+            return False
+        if self.w < inner.w:
+            return False
+        if self.h < inner.h:
+            return False
+        return True
 
 
 def convert_pdf2jpeg(src_pdf_path: str, export_dir: str) -> None:
@@ -63,7 +81,25 @@ def __filter(image_size : int, contours: Any)->list[Rectangle]:
 
         rect = Rectangle(x, y, w, h)
         rects.append(rect)
+ 
+    rects = __remove_outers(rects)
+    
     return rects
+
+def __remove_outers(rects:list[Rectangle])->list[Rectangle]:
+    inners = []
+    for rect in rects:
+        if not __is_any_contain(rect, rects):
+            inners.append(rect)
+
+    return inners
+
+
+def __is_any_contain(outer:Rectangle, inners:list[Rectangle])-> bool:
+    for inner in inners:
+        if outer.is_contain(inner):
+            return True
+    return False
 
 
 convert_pdf2jpeg("./sample.pdf", "./image")
