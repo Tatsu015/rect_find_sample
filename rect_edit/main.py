@@ -2,6 +2,7 @@ from ast import Return
 from dataclasses import dataclass
 from email.mime import image
 from email.policy import strict
+from itertools import count
 from pathlib import Path
 from tkinter.messagebox import RETRY
 from typing import Any
@@ -66,7 +67,7 @@ def find_rectangles(image_path: str) -> list[Rectangle]:
 
 
 def draw_rects(
-    src_image_path: str, dst_img_path: str, rects: list[Rectangle], buffer: int=-5
+    src_image_path: str, dst_img_path: str, rects: list[Rectangle], buffer: int = -5
 ) -> None:
     dst = cv.imread(src_image_path, cv.IMREAD_COLOR)
     rect_color = (0, 255, 0)
@@ -84,30 +85,36 @@ def draw_rects(
 def __filter(image_size: int, contours: Any) -> list[Rectangle]:
     rects: list[Rectangle] = []
     for _, contour in enumerate(contours):
-        area = cv.contourArea(contour)
-        if area < 1000:
+        if __is_too_small(image_size, contour):
             continue
-
-        if image_size * 0.99 < area:
-            continue
-
         x, y, w, h = cv.boundingRect(contour)
-
-        if h < 100:
-            continue
-
-        if w < 100:
-            continue
-
-        if w < h:
-            continue
-
-        rect = Rectangle(x, y, w, h)
-        rects.append(rect)
+        rects.append(Rectangle(x, y, w, h))
 
     rects = __remove_outers(rects)
 
     return rects
+
+
+def __is_too_small(image_size: int, contour: Any) -> bool:
+    area = cv.contourArea(contour)
+    if area < 1000:
+        return True
+
+    if image_size * 0.99 < area:
+        return True
+
+    x, y, w, h = cv.boundingRect(contour)
+
+    if h < 100:
+        return True
+
+    if w < 100:
+        return True
+
+    if w < h:
+        return True
+
+    return False
 
 
 def __remove_outers(rects: list[Rectangle]) -> list[Rectangle]:
