@@ -19,7 +19,7 @@ class Rectangle:
     w: int
     h: int
 
-    def is_contain(self, inner:"Rectangle")->bool:
+    def is_contain(self, inner: "Rectangle") -> bool:
         if self is inner:
             return False
 
@@ -53,9 +53,9 @@ def find_rectangles(image_path: str) -> list[Rectangle]:
 
     _, dst = cv.threshold(img_gray, 230, 255, cv.THRESH_BINARY)
     dst = cv.bitwise_not(dst)
-    
-    kernel = np.ones((3,3),np.uint8)
-    dst = cv.dilate(dst,kernel,iterations = 1)
+
+    kernel = np.ones((3, 3), np.uint8)
+    dst = cv.dilate(dst, kernel, iterations=1)
 
     _, dst = cv.threshold(dst, 0, 255, cv.THRESH_BINARY | cv.THRESH_OTSU)
 
@@ -64,7 +64,24 @@ def find_rectangles(image_path: str) -> list[Rectangle]:
     rects = __filter(image_size, contours)
     return rects
 
-def __filter(image_size : int, contours: Any)->list[Rectangle]:
+
+def draw_rects(
+    src_image_path: str, dst_img_path: str, rects: list[Rectangle], buffer: int=-5
+) -> None:
+    dst = cv.imread(src_image_path, cv.IMREAD_COLOR)
+    rect_color = (0, 255, 0)
+    for r in rects:
+        dst = cv.rectangle(
+            dst,
+            (r.x - buffer, r.y - buffer),
+            (r.x + r.w + buffer, r.y + r.h + buffer),
+            rect_color,
+            2,
+        )
+    cv.imwrite(dst_img_path, dst)
+
+
+def __filter(image_size: int, contours: Any) -> list[Rectangle]:
     rects: list[Rectangle] = []
     for _, contour in enumerate(contours):
         area = cv.contourArea(contour)
@@ -81,12 +98,13 @@ def __filter(image_size : int, contours: Any)->list[Rectangle]:
 
         rect = Rectangle(x, y, w, h)
         rects.append(rect)
- 
+
     rects = __remove_outers(rects)
-    
+
     return rects
 
-def __remove_outers(rects:list[Rectangle])->list[Rectangle]:
+
+def __remove_outers(rects: list[Rectangle]) -> list[Rectangle]:
     inners = []
     for rect in rects:
         if not __is_any_contain(rect, rects):
@@ -95,7 +113,7 @@ def __remove_outers(rects:list[Rectangle])->list[Rectangle]:
     return inners
 
 
-def __is_any_contain(outer:Rectangle, inners:list[Rectangle])-> bool:
+def __is_any_contain(outer: Rectangle, inners: list[Rectangle]) -> bool:
     for inner in inners:
         if outer.is_contain(inner):
             return True
@@ -104,8 +122,4 @@ def __is_any_contain(outer:Rectangle, inners:list[Rectangle])-> bool:
 
 convert_pdf2jpeg("./sample.pdf", "./image")
 rects = find_rectangles("./image/sample_01.jpeg")
-dst = cv.imread("./image/sample_01.jpeg", cv.IMREAD_COLOR)
-rect_color = (0, 255, 0)
-for r in rects:
-    dst = cv.rectangle(dst, (r.x, r.y), (r.x + r.w, r.y + r.h), rect_color, 2)
-cv.imwrite("result.jpeg", dst)
+draw_rects("./image/sample_01.jpeg", "result.jpeg", rects)
