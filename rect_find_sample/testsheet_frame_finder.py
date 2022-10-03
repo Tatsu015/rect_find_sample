@@ -29,14 +29,14 @@ class Rectangle:
 
 
 class TestsheetFrameFinder:
-    def convert_pdf2jpeg(self, src_pdf_path: str, export_dir: str) -> None:
+    def convert_pdf2png(self, src_pdf_path: str, export_dir: str) -> None:
         pdf_path = Path(src_pdf_path)
         pages = convert_from_path(pdf_path)
         image_dir = Path(export_dir)
         for i, page in enumerate(pages):
-            file_name = pdf_path.stem + "_{:02d}".format(i + 1) + ".jpeg"
+            file_name = pdf_path.stem + "_{:02d}".format(i + 1) + ".png"
             image_path = image_dir / file_name
-            page.save(str(image_path), "JPEG")
+            page.save(str(image_path), "PNG")
 
     def find_rectangles(self, image_path: str) -> list[Rectangle]:
         src = cv.imread(image_path, cv.IMREAD_COLOR)

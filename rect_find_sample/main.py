@@ -19,6 +19,6 @@ def draw_rects(
 
 
 finder = TestsheetFrameFinder()
-finder.convert_pdf2jpeg("./sample.pdf", "./image")
-rects = finder.find_rectangles("./image/sample_01.jpeg")
-draw_rects("./image/sample_01.jpeg", "result.jpeg", rects)
+finder.convert_pdf2png("./sample.pdf", "./image")
+rects = finder.find_rectangles("./image/sample_01.png")
+draw_rects("./image/sample_01.png", "result.png", rects)
