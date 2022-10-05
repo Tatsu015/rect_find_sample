@@ -88,20 +88,22 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 
+
 class FrameFindEditorWidget:
     def __init__(self, root) -> None:
         self.root = root
 
-        self.img = Image.open('result.png')       
+        self.img = Image.open("result.png")
         self.tk_img = ImageTk.PhotoImage(self.img)
         img_width, img_height = self.img.size
 
-        self.canvas = tk.Canvas(self.root, width=img_width, height=img_height)    
+        self.canvas = tk.Canvas(self.root, width=img_width, height=img_height)
         self.canvas.pack()
-        self.canvas.create_image(0, 0 , anchor = tk.NW, image=self.tk_img)    
+        self.canvas.create_image(0, 0, anchor=tk.NW, image=self.tk_img)
 
     def run(self):
         self.root.mainloop()
+
 
 app = tk.Tk()
 f = FrameFindEditorWidget(app)
