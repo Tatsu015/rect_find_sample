@@ -92,14 +92,17 @@ class FrameFindEditorWidget:
     def __init__(self, root) -> None:
         self.root = root
 
-        img = Image.open('result.png')       
-        tk_img = ImageTk.PhotoImage(img)
-        img_width, img_height = img.size
+        self.img = Image.open('result.png')       
+        self.tk_img = ImageTk.PhotoImage(self.img)
+        img_width, img_height = self.img.size
 
         canvas = tk.Canvas(self.root, width=img_width, height=img_height)    
         canvas.pack()
-        canvas.create_image(0, 0 , anchor = tk.NW, image=tk_img)    
+        canvas.create_image(0, 0 , anchor = tk.NW, image=self.tk_img)    
+
+    def run(self):
+        self.root.mainloop()
 
 app = tk.Tk()
 f = FrameFindEditorWidget(app)
-app.mainloop()
+f.run()
