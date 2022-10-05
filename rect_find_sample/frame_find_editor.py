@@ -88,13 +88,18 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 
+class FrameFindEditorWidget:
+    def __init__(self, root) -> None:
+        self.root = root
+
+        img = Image.open('result.png')       
+        tk_img = ImageTk.PhotoImage(img)
+        img_width, img_height = img.size
+
+        canvas = tk.Canvas(self.root, width=img_width, height=img_height)    
+        canvas.pack()
+        canvas.create_image(0, 0 , anchor = tk.NW, image=tk_img)    
+
 app = tk.Tk()
-img = Image.open('result.png')        # 画像ファイルを開き、ファイル情報取得。text.jpgは任意に設定
-tk_img = ImageTk.PhotoImage(img)
-img_width, img_height = img.size
-
-canvas = tk.Canvas(app, width=img_width, height=img_height)        # 画像表示エリアの作成
-canvas.pack()
-canvas.create_image(0, 0 , anchor = tk.NW, image=tk_img)        # 画像表示
-
+f = FrameFindEditorWidget(app)
 app.mainloop()
