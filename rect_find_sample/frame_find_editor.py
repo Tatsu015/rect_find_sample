@@ -96,9 +96,9 @@ class FrameFindEditorWidget:
         self.tk_img = ImageTk.PhotoImage(self.img)
         img_width, img_height = self.img.size
 
-        canvas = tk.Canvas(self.root, width=img_width, height=img_height)    
-        canvas.pack()
-        canvas.create_image(0, 0 , anchor = tk.NW, image=self.tk_img)    
+        self.canvas = tk.Canvas(self.root, width=img_width, height=img_height)    
+        self.canvas.pack()
+        self.canvas.create_image(0, 0 , anchor = tk.NW, image=self.tk_img)    
 
     def run(self):
         self.root.mainloop()
