@@ -89,7 +89,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 
 app = tk.Tk()
-img = Image.open('result.png')      
+img = Image.open('result.png')        # 画像ファイルを開き、ファイル情報取得。text.jpgは任意に設定
 tk_img = ImageTk.PhotoImage(img)
 img_width, img_height = img.size
 
